@@ -208,6 +208,12 @@ module GHI::CLI #:nodoc:
 
     attr_reader :message, :local_user, :local_repo, :user, :repo, :api,
       :action, :search_term, :number, :title, :body, :tag, :args, :verbosity
+      
+    def load_config      
+      u, r = `git config ghi.repo`.strip.split("/")
+      @user ||= u
+      @repo ||= r
+    end
 
     def parse!(*argv)
       @args, @argv = argv, argv.dup
@@ -236,6 +242,7 @@ module GHI::CLI #:nodoc:
       puts option_parser
       exit 1
     ensure
+      load_config
       run!
       $stdout.close_write
     end
